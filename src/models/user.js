@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
-export const User = mongoose.model("users", {
-    id: {
-        type: String,
-        required: true,
-    },
+const userSchema = new mongoose.Schema({
+    // id: {
+    //     type: String,
+    //     required: true,
+    // },
     name: {
         type: String,
         required: true,
@@ -28,3 +28,13 @@ export const User = mongoose.model("users", {
         },
     },
 });
+
+userSchema.pre("save", async function (next) {
+    const user = this;
+    console.log("hiii");
+    next();
+});
+
+const User = mongoose.model("User", userSchema);
+
+module.exports = User;
