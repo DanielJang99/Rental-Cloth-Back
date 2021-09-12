@@ -1,9 +1,11 @@
-// import createUser from "../controller/user_controller";
-const createUser = require("../controller/user_controller");
+const user = require("../controller/user_controller");
+const auth = require("../controller/auth_controller");
 
 const express = require("express");
 const router = new express.Router();
 
-router.post("/", createUser);
+router.post("/", user.createUser);
+router.patch("/:id", auth, user.updateUser);
+router.post("/login", user.loginUser);
 
 module.exports = router;
