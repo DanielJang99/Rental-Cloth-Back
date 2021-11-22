@@ -1,35 +1,29 @@
 const mongoose = require("mongoose");
+import { ObjectId } from "bson";
+import { baseSchema, extendSchema } from "./baseSchema";
 
-export const Rent = mongoose.model("rents", {
+const rentSchema = extendSchema(baseSchema, {
     product_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
     clothing_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
     user_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
-    days: {
-        type: Number,
-        required: true,
-    },
-    receipt_station_id: {
-        type: String,
+    receival_station_id: {
+        type: ObjectId,
         required: true,
     },
     return_station_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
-    is_valid: {
-        type: Boolean,
-        required: true,
-    },
-    receipt_date: {
+    receival_date: {
         type: String,
         required: true,
     },
@@ -37,8 +31,20 @@ export const Rent = mongoose.model("rents", {
         type: String,
         required: true,
     },
+    is_valid: {
+        type: Boolean,
+        required: true,
+    },
     status: {
-        type: String,
+        type: String, //pending, paid, cancelled, refunded
+        required: true,
+    },
+    price: {
+        type: Number,
         required: true,
     },
 });
+
+const Rent = mongoose.model("rents", rentSchema);
+
+module.exports = Rent;

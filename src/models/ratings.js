@@ -1,24 +1,26 @@
+import { ObjectId } from "bson";
+
 const mongoose = require("mongoose");
 
 export const Rating = mongoose.model("ratings", {
     product_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
     clothing_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
     user_id: {
-        type: String,
+        type: ObjectId,
         required: true,
     },
     rating: {
-        type: Boolean,
+        type: Number,
         required: true,
     },
     review: {
         type: String,
-        required: true,
+        required: false,
     },
 });

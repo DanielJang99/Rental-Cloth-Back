@@ -1,13 +1,23 @@
 const mongoose = require("mongoose");
+const { extendSchema, baseSchema } = require("./baseSchema");
+import { ObjectId } from "bson";
 
-export const ProductPrices = mongoose.model("product_prices", {
+const productPriceSchema = extendSchema(baseSchema, {
     product_id: {
-        type: String,
+        type: ObjectId,
+        required: true,
     },
-    retail_price: {
+    days: {
+        type: Number,
+    },
+    price: {
         type: Number,
     },
     discount_percentage: {
         type: Number,
     },
 });
+
+const ProductPrice = mongoose.model("product_prices", productPriceSchema);
+
+module.exports = ProductPrice;

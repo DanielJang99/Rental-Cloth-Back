@@ -2,24 +2,25 @@ import { ObjectId } from "bson";
 const { extendSchema, baseSchema } = require("./baseSchema");
 const mongoose = require("mongoose");
 
-const clothingSchema = extendSchema(baseSchema, {
+const cartSchema = extendSchema(baseSchema, {
+    user_id: {
+        type: ObjectId,
+        required: true,
+    },
     product_id: {
         type: ObjectId,
         required: true,
     },
-    isAvailable: {
-        type: Boolean,
+    quantity: {
+        type: Number,
         required: true,
     },
-    size: {
-        type: String,
-    },
-    order: {
-        type: Number,
+    isValid: {
+        type: Boolean,
         required: true,
     },
 });
 
-const Clothing = mongoose.model("clothings", clothingSchema);
+const Cart = mongoose.model("cart", cartSchema);
 
-module.exports = Clothing;
+module.exports = Cart;

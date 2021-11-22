@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
+const { extendSchema, baseSchema } = require("./baseSchema");
 
-export const Product = mongoose.model("products", {
+const productSchema = extendSchema(baseSchema, {
     name: {
         type: String,
         required: true,
@@ -9,14 +10,31 @@ export const Product = mongoose.model("products", {
         type: String,
         required: true,
     },
-    total_quantity: {
-        type: Number,
-        required: true,
-    },
     brand: {
         type: String,
     },
-    likes: {
+    quantity: {
+        type: Number,
+        required: true,
+    },
+    isAvailable: {
+        type: Boolean,
+        required: true,
+    },
+    avg_rating: {
+        type: Number,
+    },
+    ratings_quantity: {
+        type: Number,
+    },
+    daily_price: {
+        type: Number,
+    },
+    retail_price: {
         type: Number,
     },
 });
+
+const Product = mongoose.model("products", productSchema);
+
+module.exports = Product;
