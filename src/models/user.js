@@ -14,10 +14,6 @@ const userSchema = extendSchema(baseSchema, {
         required: true,
         unique: true,
     },
-    gender: {
-        type: String,
-        required: true,
-    },
     password: {
         type: String,
         required: true,
@@ -26,11 +22,10 @@ const userSchema = extendSchema(baseSchema, {
         type: String,
         required: true,
         unique: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error("Email is invalid");
-            }
-        },
+    },
+    isMarketing: {
+        type: Boolean,
+        required: true,
     },
     tokens: [
         {
@@ -44,8 +39,9 @@ const userSchema = extendSchema(baseSchema, {
 
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
-    const token = jwt.sign({ _id: user._id.toString() }, "mysecretwebtoken");
-
+    const token = jwt.sign({ _id: user._id.toString() }, "rentaclothwebtoken", {
+        expiresIn: "3 days",
+    });
     user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
@@ -54,13 +50,13 @@ userSchema.methods.generateAuthToken = async function () {
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email });
     if (!user) {
-        throw new Error("로그인 실패");
+        throw new Error("이메일과 비밀번호를 다시 확인해주세요.");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-        throw new Error("로그인 실패");
+        throw new Error("이메일과 비밀번호를 다시 확인해주세요.");
     }
 
     return user;
@@ -68,10 +64,23 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 userSchema.pre("save", async function (next) {
     const user = this;
+    if (!validator.isEmail(this.email)) {
+        next(new Error("올바른 이메일 형식이 아닙니다."));
+    }
     if (user.isModified("password")) {
         user.password = await bcrypt.hash(user.password, 8);
     }
     next();
+});
+
+userSchema.post("save", function (error, doc, next) {
+    if (error.code === 11000) {
+        "email" in error.keyValue
+            ? next(new Error("등록하신 이메일이 이미 존재합니다."))
+            : next(new Error("등록하신 전화번호가 이미 존재합니다."));
+    } else {
+        next(error);
+    }
 });
 
 const User = mongoose.model("users", userSchema);

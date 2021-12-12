@@ -2,14 +2,13 @@ const User = require("../models/user");
 
 const createUser = async (req, res) => {
     const user = new User(req.body);
+    console.log("received", req.body);
     try {
         await user.save();
-        console.log("Saved user");
         const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
     } catch (e) {
-        console.log(e);
-        res.status(400).send({ error: "failed to create user" });
+        res.status(400).send({ error: e.message });
     }
 };
 
@@ -32,7 +31,6 @@ const updateUser = async (req, res) => {
         if (!user) {
             res.status(400).send({ error: "해당 유저가 존재하지 않습니다" });
         }
-        console.log(user);
         updates.forEach((update) => (user[update] = req.body[update]));
         await user.save();
         res.send(user);
@@ -50,7 +48,7 @@ const loginUser = async (req, res) => {
         const token = await user.generateAuthToken();
         res.send({ user, token });
     } catch (e) {
-        res.status(400).send();
+        res.status(400).send({ error: e.message });
     }
 };
 
@@ -76,10 +74,23 @@ const logoutAll = async (req, res) => {
     }
 };
 
+const getUser = async (req, res) => {
+    try {
+        const user_id = req.params.id;
+        const obj_user = await User.findById(user_id);
+        obj_user
+            ? res.status(201).send({ user: obj_user })
+            : new Error("product does not exist");
+    } catch (e) {
+        res.status(400).send({ error: "failed to fetch user" });
+    }
+};
+
 module.exports = {
     createUser,
     updateUser,
     loginUser,
     logoutUser,
     logoutAll,
+    getUser,
 };

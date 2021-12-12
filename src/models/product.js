@@ -28,12 +28,22 @@ const productSchema = extendSchema(baseSchema, {
         type: Number,
     },
     daily_price: {
+        // 랜딩에 보여질 가격
         type: Number,
     },
     retail_price: {
+        // 랜딩에 보여질 가격
         type: Number,
     },
+    image_urls : [String], 
 });
+
+productSchema.statics.checkAvailability = async (product_id) => {
+    const product = await Product.findOne({
+        product_id: product_id,
+    });
+    return product.isAvailable ? true : false;
+};
 
 const Product = mongoose.model("products", productSchema);
 

@@ -1,7 +1,10 @@
-const mongoose = require("mongoose");
-const connectionURL = "mongodb://127.0.0.1:27017" || process.env.MONGOURL;
+require("dotenv").config();
 
-mongoose.connect(`${connectionURL}/rental-cloth`, {
+const mongoose = require("mongoose");
+// const connectionURL = "mongodb://127.0.0.1:27017" || process.env.MONGOURL;
+const connectionURL = process.env.MONGOURL;
+
+mongoose.connect(`${connectionURL}/rental_cloth`, {
     useNewUrlParser: true,
 });
 

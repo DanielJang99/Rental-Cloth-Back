@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
-import { ObjectId } from "bson";
-import { baseSchema, extendSchema } from "./baseSchema";
+const { extendSchema, baseSchema } = require("./baseSchema");
+
+const ObjectId = mongoose.Schema.Types.ObjectId;
+const DateType = mongoose.Schema.Types.Date;
 
 const rentSchema = extendSchema(baseSchema, {
     product_id: {
@@ -15,6 +17,10 @@ const rentSchema = extendSchema(baseSchema, {
         type: ObjectId,
         required: true,
     },
+    days: {
+        type: Number,
+        required: true,
+    },
     receival_station_id: {
         type: ObjectId,
         required: true,
@@ -23,16 +29,12 @@ const rentSchema = extendSchema(baseSchema, {
         type: ObjectId,
         required: true,
     },
-    receival_date: {
-        type: String,
+    start_date: {
+        type: DateType,
         required: true,
     },
-    return_date: {
-        type: String,
-        required: true,
-    },
-    is_valid: {
-        type: Boolean,
+    end_date: {
+        type: DateType,
         required: true,
     },
     status: {

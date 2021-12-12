@@ -1,6 +1,6 @@
-import { ObjectId } from "bson";
 const { extendSchema, baseSchema } = require("./baseSchema");
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const cartSchema = extendSchema(baseSchema, {
     user_id: {

@@ -1,6 +1,5 @@
-import { ObjectId } from "bson";
-
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Schema.Types.ObjectId;
 
 export const Rating = mongoose.model("ratings", {
     product_id: {
