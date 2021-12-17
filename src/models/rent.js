@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { string } = require("yargs");
 const { extendSchema, baseSchema } = require("./baseSchema");
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
@@ -44,6 +45,12 @@ const rentSchema = extendSchema(baseSchema, {
     price: {
         type: Number,
         required: true,
+    },
+    size: {
+        type: String,
+    },
+    color: {
+        type: String,
     },
 });
 
