@@ -2,6 +2,8 @@ var mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
 const Rent = require("../models/rent");
+const Product = require("../models/product");
+
 const {
     processRent,
     processRentCancellation,
@@ -10,6 +12,7 @@ const {
 const createRent = async (req, res) => {
     const obj_rent = await processRent(req.body);
     const { error } = obj_rent;
+    console.error(error);
     return error
         ? res.status(400).send({ error })
         : res.status(201).send(obj_rent);
@@ -41,11 +44,13 @@ const getUserRentByProduct = async (req, res) => {
     const user_id = req.params.user_id;
     const product_id = req.params.product_id;
     try {
+        const obj_product = await Product.findById(product_id);
+        const { name } = obj_product;
         const obj_rent = await Rent.findOne({
             user_id: ObjectId(user_id),
             product_id: ObjectId(product_id),
         }).sort({ createdAt: -1 });
-        res.status(201).send(obj_rent);
+        res.status(201).send({ rent: obj_rent, name });
     } catch (e) {
         console.error(e);
         res.status(400).send({

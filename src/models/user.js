@@ -25,7 +25,7 @@ const userSchema = extendSchema(baseSchema, {
     },
     isMarketing: {
         type: Boolean,
-        required: true,
+        // required: true,
     },
     tokens: [
         {
