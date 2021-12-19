@@ -13,12 +13,11 @@ const processRent = async (rent_data) => {
     const { product_id } = rent_data;
     const obj_product = await Product.findById(product_id);
     try {
-        const { is_rental } = obj_product;
         const obj_clothing = await getAvailableClothing(product_id);
         if (!obj_clothing) {
             throw new Error("해당 제품은 현재 품절입니다.");
         }
-        if (!is_rental) {
+        if (!obj_product.is_rental) {
             await updateClothingForRent(obj_clothing);
         }
         rent_data["clothing_id"] = obj_clothing._id;

@@ -22,12 +22,12 @@ const rentSchema = extendSchema(baseSchema, {
         type: Number,
         required: true,
     },
-    receival_station_id: {
-        type: ObjectId,
+    receival_station: {
+        type: String,
         required: true,
     },
-    return_station_id: {
-        type: ObjectId,
+    return_station: {
+        type: String,
         required: true,
     },
     start_date: {

@@ -30,8 +30,15 @@ const cancelRent = async (req, res) => {
 const getUserRents = async (req, res) => {
     const user_id = req.params.user_id;
     try {
-        const user_rents = await Rent.find({ user_id: ObjectId(user_id) });
-        res.status(201).send(user_rents);
+        let obj_rent = await Rent.find({ user_id: ObjectId(user_id) }).lean();
+        if (obj_rent) {
+            for (let rent of obj_rent) {
+                const { product_id } = rent;
+                const obj_product = await Product.findById(product_id);
+                rent.product = obj_product;
+            }
+            res.status(201).send(obj_rent);
+        }
     } catch (e) {
         console.error(e);
         res.status(400).send({
