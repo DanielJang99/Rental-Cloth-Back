@@ -45,13 +45,14 @@ const get_nc_body = async (template_code, data) => {
 const get_alimtalk_content = async (template_code, data) => {
     let content;
     switch (template_code) {
-        case "testAlim":
+        case "testAlim": {
             content =
                 `안녕하세요.` +
                 `\n` +
                 `이것은 렌타클로스 테스트 알림톡 입니다.`;
             break;
-        case "orderReg":
+        }
+        case "orderReg": {
             const { rent_id, name } = data;
             const obj_rent = await Rent.findById(rent_id);
             const price = obj_rent.price;
@@ -79,6 +80,30 @@ const get_alimtalk_content = async (template_code, data) => {
                 `\n` +
                 `추가적인 문의는 본 톡방에 남겨주시면, 담당자가 확인 후 안내드리겠습니다. `;
             break;
+        }
+        case "rentOrder2": {
+            const { rent_id, name } = data;
+            const obj_rent = await Rent.findById(rent_id);
+            const price = obj_rent.price;
+            const product_id = obj_rent.product_id;
+            const obj_product = await Product.findById(product_id);
+            const product_name = obj_product.name;
+            content =
+                `[주문 접수 안내]` +
+                `\n` +
+                `${name}님의 주문이 접수 되었습니다.` +
+                `\n` +
+                `\n` +
+                `- 주문번호: ${rent_id}` +
+                `\n` +
+                `- 상품명:  ${product_name}` +
+                `\n` +
+                `- 결제액: ${price}원` +
+                `\n` +
+                `\n` +
+                `상품 재고 확인 후 결제 방법 안내해 드리겠습니다.`;
+            break;
+        }
         default:
             break;
     }
