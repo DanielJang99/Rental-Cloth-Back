@@ -11,19 +11,19 @@ const {
 
 const processRent = async (rent_data) => {
     const { product_id } = rent_data;
-    const obj_product = await Product.findById(product_id);
+    const obj_product = await Product.findById(product_id).lean();
     try {
         const obj_clothing = await getAvailableClothing(product_id);
-        if (!obj_clothing) {
+        if (obj_clothing) {
+            !obj_product.is_rental &&
+                (await updateClothingForRent(obj_clothing));
+            rent_data["clothing_id"] = obj_clothing._id;
+            const obj_rent = new Rent(rent_data);
+            await obj_rent.save();
+            return obj_rent;
+        } else {
             throw new Error("해당 제품은 현재 품절입니다.");
         }
-        if (!obj_product.is_rental) {
-            await updateClothingForRent(obj_clothing);
-        }
-        rent_data["clothing_id"] = obj_clothing._id;
-        const obj_rent = new Rent(rent_data);
-        await obj_rent.save();
-        return obj_rent;
     } catch (e) {
         return { error: e.message };
     }
