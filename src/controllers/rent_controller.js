@@ -30,7 +30,9 @@ const cancelRent = async (req, res) => {
 const getUserRents = async (req, res) => {
     const user_id = req.params.user_id;
     try {
-        let obj_rent = await Rent.find({ user_id: ObjectId(user_id) }).lean();
+        let obj_rent = await Rent.find({ user_id: ObjectId(user_id) })
+            .sort({ createdAt: -1 })
+            .lean();
         if (obj_rent) {
             for (let rent of obj_rent) {
                 const { product_id } = rent;
