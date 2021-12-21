@@ -1,6 +1,6 @@
 const Rent = require("../models/rent");
 const Product = require("../models/product");
-const { getFormattedDate } = require("../utils/utils");
+const { getFormattedDate, getFormattedPrice } = require("../utils/utils");
 
 const crypto = require("crypto");
 const NC_SERVICE_ID = "ncp:kkobizmsg:kr:2758773:rentacloth";
@@ -85,7 +85,7 @@ const get_alimtalk_content = async (template_code, data) => {
         case "rentOrder2": {
             const { rent_id, name } = data;
             const obj_rent = await Rent.findById(rent_id);
-            const price = obj_rent.price;
+            const price = getFormattedPrice(obj_rent.price);
             const product_id = obj_rent.product_id;
             const obj_product = await Product.findById(product_id);
             const product_name = obj_product.name;
