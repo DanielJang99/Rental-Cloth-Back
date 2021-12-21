@@ -1,5 +1,6 @@
 const Rent = require("../models/rent");
 const Product = require("../models/product");
+const { getFormattedDate } = require("../utils/utils");
 
 const crypto = require("crypto");
 const NC_SERVICE_ID = "ncp:kkobizmsg:kr:2758773:rentacloth";
@@ -104,10 +105,65 @@ const get_alimtalk_content = async (template_code, data) => {
                 `상품 재고 확인 후 결제 방법 안내해 드리겠습니다.`;
             break;
         }
+        case "adminOrder": {
+            const { rent_id, name } = data;
+            const obj_rent = await Rent.findById(rent_id);
+            let {
+                price,
+                product_id,
+                size,
+                color,
+                receival_station,
+                return_station,
+                start_date,
+                end_date,
+            } = obj_rent;
+            start_date = getFormattedDate(start_date);
+            end_date = getFormattedDate(end_date);
+            const obj_product = await Product.findById(product_id);
+            const product_name = obj_product.name;
+            content =
+                `[렌타클로스 주문 접수 알림]` +
+                `\n` +
+                `\n` +
+                `- 이름: ${name}` +
+                `\n` +
+                `- 주문번호: ${rent_id}` +
+                `\n` +
+                `- 상품명:  ${product_name}` +
+                `\n` +
+                `- 사이즈: ${size}` +
+                `\n` +
+                `- 색상: ${color}` +
+                `\n` +
+                `- 수령처: ${receival_station}` +
+                `\n` +
+                `- 반납처: ${return_station}` +
+                `\n` +
+                `- 결제액: ${price}원` +
+                `\n` +
+                `- 시작일: ${start_date}` +
+                `\n` +
+                `- 반납일: ${end_date}`;
+            break;
+        }
         default:
             break;
     }
     return content;
 };
 
-module.exports = { get_nc_headers, get_nc_body };
+const get_admin_template_code = (template_code) => {
+    let admin_tc;
+    switch (template_code) {
+        case "rentOrder2": {
+            admin_tc = "adminOrder";
+            break;
+        }
+        default:
+            break;
+    }
+    return admin_tc;
+};
+
+module.exports = { get_nc_headers, get_nc_body, get_admin_template_code };

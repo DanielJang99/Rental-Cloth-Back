@@ -1,4 +1,8 @@
-const { get_nc_headers, get_nc_body } = require("../services/alimtalk_service");
+const {
+    get_nc_headers,
+    get_nc_body,
+    get_admin_template_code,
+} = require("../services/alimtalk_service");
 const User = require("../models/user");
 const axios = require("axios");
 const { admins } = require("../utils/utils");
@@ -22,7 +26,11 @@ const sendAlimtalk = async (req, res) => {
     if (include_admin) {
         for (let admin of admins) {
             data["phone"] = admin;
-            const admin_alimtalk_body = await get_nc_body(template_code, data);
+            const admin_template_code = get_admin_template_code(template_code);
+            const admin_alimtalk_body = await get_nc_body(
+                admin_template_code,
+                data,
+            );
             await axios.post(
                 NC_ALIMTALK_SEND_URL,
                 admin_alimtalk_body,
