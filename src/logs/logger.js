@@ -1,6 +1,7 @@
 const appRoot = require("app-root-path");
 const winston = require("winston");
 require("winston-daily-rotate-file");
+require("dotenv").config();
 
 if (process.env.NODE_ENV == "production") {
     const transport = new winston.transports.DailyRotateFile({

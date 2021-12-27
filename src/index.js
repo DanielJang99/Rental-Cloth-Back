@@ -1,10 +1,11 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const { getFormattedDatetime } = require("../src/utils/utils");
 const logger = require("../src/logs/logger");
 const app = express();
-const port = process.env.PORT || 7000;
+const port = process.env.PORT;
 
 app.use(express.json()); // this is to parse incoming JSON into a JavaScript object which you can access on req.body
 app.use(cors());
