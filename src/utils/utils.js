@@ -7,6 +7,13 @@ const getFormattedDate = (date) => {
     }.${new_date.getDate()}`;
 };
 
+const getFormattedDatetime = () => {
+    let d = new Date();
+    return `${d.getFullYear()}.${
+        d.getMonth() + 1
+    }.${d.getDate()}-${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+};
+
 const getFormattedPrice = (p) => {
     const price = p.toString();
     const price_length = price.length;
@@ -24,4 +31,9 @@ const getFormattedPrice = (p) => {
     return price;
 };
 
-module.exports = { admins, getFormattedDate, getFormattedPrice };
+module.exports = {
+    admins,
+    getFormattedDate,
+    getFormattedDatetime,
+    getFormattedPrice,
+};
