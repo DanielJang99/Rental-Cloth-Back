@@ -17,6 +17,9 @@ morgan.format("myformat", ":date | :method :url | :status | :response-time ms");
 
 app.use(
     morgan("myformat", {
+        skip: function (req, res) {
+            return res.statusCode == 404;
+        },
         stream: logger.stream,
     }),
 );
