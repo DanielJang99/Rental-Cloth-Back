@@ -1,4 +1,8 @@
+var mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
+const Rent = require("../models/rent");
 const User = require("../models/user");
+const { admins } = require("../utils/utils");
 
 const createUser = async (req, res) => {
     const user = new User(req.body);
@@ -85,6 +89,33 @@ const getUser = async (req, res) => {
     }
 };
 
+const getUsersAndRents = async (req, res) => {
+    try {
+        const obj_users = await User.find({}).sort({ createdAt: -1 }).lean();
+        for (const user of obj_users) {
+            const user_id = user._id;
+            const obj_rents = await Rent.find({ user_id: user_id });
+            user["rents"] = obj_rents;
+        }
+        res.status(201).send(obj_users);
+    } catch {
+        res.status(400).send({ error: "failed to fetch users" });
+    }
+};
+
+const getUserAdmin = async (req, res) => {
+    const user_id = req.params.id;
+    try {
+        const obj_user = await User.findOne({
+            isAdmin: true,
+            _id: ObjectId(user_id),
+        });
+        res.status(201).send(obj_user);
+    } catch {
+        res.status(400).send({ error: "failed to fetch admins" });
+    }
+};
+
 module.exports = {
     createUser,
     updateUser,
@@ -92,4 +123,6 @@ module.exports = {
     logoutUser,
     logoutAll,
     getUser,
+    getUsersAndRents,
+    getUserAdmin,
 };

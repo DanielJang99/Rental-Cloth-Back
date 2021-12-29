@@ -23,7 +23,7 @@ const userSchema = extendSchema(baseSchema, {
         required: true,
         unique: true,
     },
-    isMarketing: {
+    isAdmin: {
         type: Boolean,
         // required: true,
     },
